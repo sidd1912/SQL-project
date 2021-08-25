@@ -1,0 +1,181 @@
+﻿FINAL CODE
+
+
+Create database project;
+
+
+use project;
+
+
+create table Contest (Contest_id integer not null primary key, Hacker_id integer, Name char(20));
+
+
+insert into Contest values (66406,17973,'Rose');
+
+
+insert into Contest values (66556,79153,'Angela');
+
+
+
+
+insert into Contest values (94828,80275,'Frank');
+
+
+
+
+Create table College (College_id integer primary key, Contest_id integer, Foreign key (Contest_id) references Contest(Contest_id));
+
+
+ insert into college values (11219,66406);
+
+
+
+
+insert into college values (32473,66556);
+
+
+
+
+insert into college values (56685,94828);
+
+
+create table Challenge (Challenge_id integer primary key, college_id integer, foreign key (college_id) references college (college_id));
+
+
+insert into challenge values (18765,11219);
+
+
+
+
+insert into challenge values (47127,11219);
+
+
+insert into challenge values (60292,32473);
+
+
+insert into challenge values (72974,56685);
+
+
+
+
+
+
+create table View_Stats ( Challenge_id integer, Total_Views integer, Total_Unique_Views integer, foreign key (challenge_id) references challenge (challenge_id));
+
+
+
+
+insert into view_stats values (47127,26,19);
+
+
+insert into view_stats values (47127,15,14);
+
+
+insert into view_stats values (18765,43,10);
+
+
+insert into view_stats values (18765,72,13);
+
+
+insert into view_stats values (72974,35,17);
+
+
+insert into view_stats values (60292,11,10);
+
+
+insert into view_stats values (72974,41,15);
+
+
+insert into view_stats values (60292,75,11);
+
+
+create table Submission_Stats ( Challenge_id integer, Total_Submissions integer, Total_Accepted_submissions integer, foreign key (challenge_id) references challenge (challenge_id));
+
+
+insert into submission_stats values (60292, 34,12);
+
+
+insert into submission_stats values (47127, 27,10);
+
+
+insert into submission_stats values (47127, 56,18);
+
+
+insert into submission_stats values (60292, 74,12);
+
+
+insert into submission_stats values (60292, 83,8);
+
+
+insert into submission_stats values (72974 68,24);
+
+
+insert into submission_stats values (72974, 82,14);
+
+
+insert into submission_stats values (47127, 28,11);
+
+
+
+
+SELECT CON.CONTEST_ID,
+
+
+CON.HACKER_ID, CON.NAME,
+
+
+SUM(TOTAL_SUBMISIONS), SUM(TOTAL ACCEPTED SUBMISSIONS),
+
+
+SUM(TOTAL_VIEWS), SUM(TOTAL_UNIQUE_VIEWS)
+
+
+FROM CONTEST CON
+
+
+JOIN COLLEGE COL ON CON.CONTEST ID = COL.CONTEST_ID 
+JOIN CHALLENGE CHA ON COL.COLLEGE ID = CHA.COLLEGE_ID
+
+
+LEFT JOIN
+
+
+(SELECT CHALLENGE_ID,
+
+
+SUM(TOTAL VIEWS) AS TOTAL VIEWS,
+
+
+SUM(TOTAL UNIQUE_VIEWS) AS TOTAL_UNIQUE_VIEWS FROM VIEW_STATS
+
+
+GROUP BY CHALLENGE_ID) VS ON CHA.CHALLENGE_ID VS.CHALLENGE_ID
+LEFT JOIN
+
+
+(SELECT CHALLENGE_ID, SUM(TOTAL_SUBMISIONS) AS TOTAL_SUBMISIONS,
+
+
+SUM(TOTAL ACCEPTED SUBMISSIONS) AS TOTAL ACCEPTED SUBMISSIONS
+
+
+FROM SUBMISSION STATS GROUP BY CHALLENGE_ID) SS ON CHA.CHALLENGE_ID = 
+SS.CHALLENGE_ID
+
+
+GROUP BY CON.CONTEST ID,
+
+
+CON.HACKER_ID, CON. NAME
+
+
+HAVING SUM(TOTAL_SUBMISIONS) !=0
+
+
+OR SUM(TOTAL_ACCEPTED SUBMISSIONS) !=0
+
+
+OR SUM(TOTAL VIEWS) !=0 OR SUM(TOTAL_UNIQUE_VIEWS) !=0
+
+
+ORDER BY CONTEST_ID;
